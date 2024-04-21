@@ -21,20 +21,20 @@ int main(int argc, char** argv)
 	std::cout << "Введите номер месяца: ";
 	std::cin >> number;
 	while(number != 0) {
-      switch (static_cast<Months>(number)) {
+		switch (static_cast<Months>(number)) {
 		  case Months::JANUARY:
 			  std::cout << "Январь" << std::endl;
 			  break;
 		  case Months::FEBRUARY:
 			  std::cout << "Февраль" << std::endl;
 			  break;
-    	  case Months::MARCH:
+		  case Months::MARCH:
 			  std::cout << "Март" << std::endl;
 			  break;
-    	  case Months::APRIL:
+		  case Months::APRIL:
 			  std::cout << "Апрель" << std::endl;
 			  break;
-    	  case Months::MAY:
+		  case Months::MAY:
 			  std::cout << "Май" << std::endl;
 			  break;
 		  case Months::JUNE:
