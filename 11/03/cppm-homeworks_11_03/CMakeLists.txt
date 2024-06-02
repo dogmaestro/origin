@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.20)
+project(cppm-homeworks_11_03 VERSION 1.0 LANGUAGES CXX)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+add_library(LeaverDynamicLib SHARED Leaver.h Leaver.cpp)
+add_executable(cppm-homeworks_11_03 cppm-homeworks_11_03_client.cpp)
+target_link_libraries(cppm-homeworks_11_03 LeaverDynamicLib)
