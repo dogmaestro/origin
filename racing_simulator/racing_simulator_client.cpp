@@ -1,22 +1,17 @@
-﻿#include <iostream>
+#include <iostream>
 #include <algorithm>
 #include "Vehicle.h"
-#include "Camel.h"
-#include "CamelSpeedster.h"
-#include "Centaur.h"
-#include "AllTerrainBoots.h"
-#include "MagicCarpet.h"
-#include "Eagle.h"
-#include "Broom.h"
-#define NUM 7
+#include "VehicleFactory.h"
+#define MAX_VEHICLES 50
 
 class Game {
 private:
 	int raceType{};
 	int numberOfRegisteredVehicles{};
 	double distance{};
-	Vehicle* availableVehicles[NUM] = {};
-	Vehicle* participatingVehicles[NUM] = {};
+	size_t totalVehicles;
+	Vehicle** availableVehicles; 
+	Vehicle* participatingVehicles[MAX_VEHICLES] = {};
 	bool registered{ false };
 	bool completed{ false };
 	std::string raceNames[3] = { "Гонка для наземного транспорта", "Гонка для воздушного транспорта", "Гонка для наземного и воздушного транспорта" };
@@ -24,7 +19,7 @@ private:
 		std::string name{};
 		double raceTime{};
 	};
-	PlayerResult results[NUM] = {};
+	PlayerResult results[MAX_VEHICLES] = {};
 
 	void getRaceType();
 	void getDistance();
@@ -43,19 +38,14 @@ public:
 };
 
 Game::Game() {
-	availableVehicles[0] = new AllTerrainBoots();
-	availableVehicles[1] = new Broom();
-	availableVehicles[2] = new Camel();
-	availableVehicles[3] = new Centaur();
-	availableVehicles[4] = new Eagle();
-	availableVehicles[5] = new CamelSpeedster();
-	availableVehicles[6] = new MagicCarpet();
+	availableVehicles = makeVehicles(totalVehicles);
 }
 
 Game::~Game() {
-	for (int i = 0; i < NUM; i++) {
+	for (int i = 0; i < totalVehicles; i++) {
 		delete availableVehicles[i];
 	}
+	delete[] availableVehicles;
 }
 
 void Game::Play() {
@@ -159,12 +149,14 @@ void Game::printGameData() {
 
 int Game::getVehicleType() {
 	int vehicleType;
-	for (int i = 0; i < NUM; i++) {
+	for (int i = 0; i < totalVehicles; i++) {
 		std::cout << i + 1 << ". " << availableVehicles[i]->getName() << std::endl;
 	}
 	std::cout << "0. Закончить регистрацию" << std::endl;
-	std::cout << "Выберите транспорт или 0 для окончания процесса регистрации: ";
-	std::cin >> vehicleType;
+	do {
+		std::cout << "Выберите транспорт или 0 для окончания процесса регистрации: ";
+		std::cin >> vehicleType;
+	} while (vehicleType < 0 || vehicleType > totalVehicles);
 	return vehicleType;
 }
 
@@ -203,12 +195,12 @@ int Game::registerVehicleAndGetType() {
 		}
 		participatingVehicles[++numberOfRegisteredVehicles - 1] = availableVehicles[registeringVehicleType - 1];
 		std::cout << availableVehicles[registeringVehicleType - 1]->getName() << " успешно зрегистрирован!" << std::endl;
-	} while (registeringVehicleType < 0 || registeringVehicleType > 7);
+	} while (registeringVehicleType < 0 || registeringVehicleType > totalVehicles);
 	return registeringVehicleType;
 }
 
 void Game::Run() {
-	PlayerResult results[NUM] = {};
+	PlayerResult results[MAX_VEHICLES] = {};
 	std::cout << "Результаты гонки:" << std::endl;
 	for (int i = 0; i < numberOfRegisteredVehicles; i++) {
 		PlayerResult playerResult{ participatingVehicles[i]->getName() , participatingVehicles[i]->getRaceTime(distance) };
