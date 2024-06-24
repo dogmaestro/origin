@@ -8,17 +8,12 @@ add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 endif()
 
-add_library(RacingSimulatorLib SHARED Vehicle.h 
-                                      LandVehicle.h LandVehicle.cpp
-                                      AirVehicle.h AirVehicle.cpp
-                                      Camel.h Camel.cpp
-                                      CamelSpeedster.h CamelSpeedster.cpp 
-                                      Centaur.h Centaur.cpp 
-                                      AllTerrainBoots.h AllTerrainBoots.cpp 
-                                      MagicCarpet.h MagicCarpet.cpp
-                                      Eagle.h Eagle.cpp 
-                                      Broom.h Broom.cpp 
-                                      VehicleFactory.h )
 
-add_executable(racing_simulator racing_simulator_client.cpp)
-target_link_libraries(racing_simulator RacingSimulatorLib)
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+
+add_subdirectory(RacingSimulatorLib)
+
+add_executable(${PROJECT_NAME} racing_simulator_client.cpp)
+#include_directories(RacingSimulatorLib)
+target_link_libraries(${PROJECT_NAME} PRIVATE RacingSimulatorLib)
